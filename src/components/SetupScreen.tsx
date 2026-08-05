@@ -150,11 +150,6 @@ export function SetupScreen() {
               </button>
             ))}
           </div>
-          <p className="mt-3 text-[0.72rem] text-ink-2 max-w-prose">
-            Worked example: chrome oxide at 0.5% max over 21 tiles on a 100 g dry portion gives
-            0.1 g steps — right at the floor of a 0.01 g scale. Watch the step readout on each
-            corner below.
-          </p>
         </section>
 
         {/* 04 — corners */}
