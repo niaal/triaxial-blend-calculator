@@ -37,6 +37,7 @@ export function decodeBlend(param: string): Blend | null {
     return {
       name: typeof parsed.name === 'string' ? parsed.name : d.name,
       base: { ...d.base, ...parsed.base },
+      atmosphere: parsed.atmosphere === 'red' ? 'red' : 'ox',
       corners: parsed.corners,
       grid: parsed.grid,
       measurement: {

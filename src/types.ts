@@ -1,5 +1,7 @@
 export type TileCount = 21 | 28 | 36 | 45
 
+export type Atmosphere = 'ox' | 'red'
+
 export type Hazard = 'dust' | 'toxic' | 'fumes' | 'volatile' | 'not-food-safe'
 
 /** Family tags used by the interaction-rule engine. */
@@ -24,9 +26,16 @@ export type Material = {
   defaultMax: number
   note?: string
   hazards: Hazard[]
-  /** Approximate fired colour at cone 10 ox over a calcium-rich base — drives the axis tint. */
+  /** Approximate fired colour at cone 10 over a calcium-rich base — drives the axis tint. */
   firedColour: string
   families: Family[]
+  /** Overrides applied when the blend is fired in reduction; unset fields fall through. */
+  reduction?: Partial<
+    Pick<
+      Material,
+      'note' | 'firedColour' | 'recommendedMin' | 'recommendedMax' | 'defaultMax'
+    >
+  >
 }
 
 export type BaseGlaze = {
@@ -64,6 +73,7 @@ export type MeasurementConfig = {
 export type Blend = {
   name: string
   base: BaseGlaze
+  atmosphere: Atmosphere
   corners: [Corner, Corner, Corner]
   grid: GridConfig
   measurement: MeasurementConfig
@@ -73,6 +83,8 @@ export type Interaction = {
   families: [Family, Family]
   effect: string
   severity: 'opportunity' | 'caution'
+  /** Restrict a rule to one atmosphere; unset = applies in both. */
+  atmosphere?: Atmosphere
 }
 
 export const CORNER_LABELS = ['A', 'B', 'C'] as const

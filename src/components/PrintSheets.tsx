@@ -28,7 +28,8 @@ function PrintHeader({ subtitle }: { subtitle: string }) {
           <span style={{ fontSize: '9pt' }}>{new Date().toLocaleDateString()}</span>
         </div>
         <div style={{ fontSize: '9pt', marginTop: '2pt' }}>
-          {subtitle} · base {blend.base.name} · {m.portionWeight} g {m.portionMode} portion
+          {subtitle} · cone 10 {blend.atmosphere === 'red' ? 'reduction' : 'oxidation'} · base{' '}
+          {blend.base.name} · {m.portionWeight} g {m.portionMode} portion
           {m.portionMode === 'slurry' && ` (SG ${m.slurrySG} → ${fmt(d.dryWeight, 1)} g dry base)`} ·
           scale {m.scaleIncrement} g
         </div>

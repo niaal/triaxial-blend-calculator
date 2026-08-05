@@ -41,6 +41,27 @@ export function SetupScreen() {
               />
             </div>
             <div className="sm:col-span-2">
+              <span className="field-label">Firing</span>
+              <div className="flex flex-wrap gap-1" role="group" aria-label="Kiln atmosphere">
+                {([['ox', 'Cone 10 oxidation'], ['red', 'Cone 10 reduction']] as const).map(
+                  ([value, label]) => (
+                    <button
+                      key={value}
+                      className="chip"
+                      aria-pressed={blend.atmosphere === value}
+                      onClick={() => dispatch({ type: 'set-atmosphere', atmosphere: value })}
+                    >
+                      {label}
+                    </button>
+                  ),
+                )}
+              </div>
+              <p className="mt-1 text-[0.65rem] text-ink-2">
+                Changes the guidance, not the maths — ranges, notes, colours and interaction
+                flags follow the kiln.
+              </p>
+            </div>
+            <div className="sm:col-span-2">
               <label className="field-label" htmlFor="base-recipe">Base recipe (optional, prints on the sheet)</label>
               <input
                 id="base-recipe"
@@ -157,7 +178,8 @@ export function SetupScreen() {
           <h2 id="sec-corners" className="section-label">
             <span className="num">04</span> Corners
             <span className="normal-case tracking-normal font-normal text-[0.68rem]">
-              ranges assume a calcium-rich, zinc-free base at cone 10 ox
+              ranges assume a calcium-rich, zinc-free base at cone 10{' '}
+              {blend.atmosphere === 'red' ? 'reduction' : 'oxidation'}
             </span>
           </h2>
           <div className="grid gap-5 md:grid-cols-3">

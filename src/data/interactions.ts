@@ -1,4 +1,4 @@
-import type { BaseGlaze, Interaction, Material } from '../types'
+import type { Atmosphere, BaseGlaze, Interaction, Material } from '../types'
 
 /**
  * Pairwise rules matched on family tags, so e.g. "cobalt + manganese" fires
@@ -10,6 +10,13 @@ export const INTERACTIONS: Interaction[] = [
     effect:
       'Pink to crimson. Needs a calcium-rich base. Roughly 0.25–0.5% chrome against 5–8% tin. The main route to red at cone 10 oxidation.',
     severity: 'opportunity',
+    atmosphere: 'ox',
+  },
+  {
+    families: ['chrome', 'tin'],
+    effect: 'Plum to dull maroon — chrome-tin pink is an oxidation effect.',
+    severity: 'caution',
+    atmosphere: 'red',
   },
   {
     families: ['cobalt', 'manganese'],
@@ -25,11 +32,25 @@ export const INTERACTIONS: Interaction[] = [
     families: ['iron', 'rutile'],
     effect: 'Variegated ochre and gold.',
     severity: 'opportunity',
+    atmosphere: 'ox',
+  },
+  {
+    families: ['iron', 'rutile'],
+    effect: "Hare's-fur and tea-dust streaking — a classic reduction pairing.",
+    severity: 'opportunity',
+    atmosphere: 'red',
   },
   {
     families: ['copper', 'tin'],
     effect: 'Opaque, muted green — the tin kills the depth.',
     severity: 'caution',
+    atmosphere: 'ox',
+  },
+  {
+    families: ['copper', 'tin'],
+    effect: '1–2% tin steadies and brightens copper reds.',
+    severity: 'opportunity',
+    atmosphere: 'red',
   },
   {
     families: ['copper', 'cobalt'],
@@ -77,11 +98,13 @@ export type MatchedNote = {
 export function matchedInteractions(
   cornerMaterials: Array<Material | undefined>,
   base: BaseGlaze,
+  atmosphere: Atmosphere,
 ): MatchedNote[] {
   const notes: MatchedNote[] = []
   const present = cornerMaterials.filter((m): m is Material => !!m)
 
   for (const rule of INTERACTIONS) {
+    if (rule.atmosphere && rule.atmosphere !== atmosphere) continue
     const [fa, fb] = rule.families
     const holdersA = present.filter((m) => m.families.includes(fa))
     const holdersB = present.filter((m) => m.families.includes(fb))

@@ -1,4 +1,4 @@
-import type { Material } from '../types'
+import type { Atmosphere, Material } from '../types'
 
 /**
  * Seed library. Ranges assume a calcium-rich, zinc-free base (Leach 4321
@@ -66,6 +66,13 @@ export const MATERIALS: Material[] = [
     note: 'Green in oxidation. Metallic and matting above ~5%.',
     firedColour: '#4e8f5c',
     families: ['copper'],
+    reduction: {
+      recommendedMin: 0.3,
+      recommendedMax: 2,
+      defaultMax: 1,
+      note: 'Copper red territory — 0.3–1% with a touch of tin or iron. Greens need oxidation.',
+      firedColour: '#8e3542',
+    },
   },
   {
     id: 'copper-oxide',
@@ -78,6 +85,13 @@ export const MATERIALS: Material[] = [
     note: 'Stronger than the carbonate.',
     firedColour: '#3f7a4c',
     families: ['copper'],
+    reduction: {
+      recommendedMin: 0.25,
+      recommendedMax: 1.5,
+      defaultMax: 0.75,
+      note: 'Stronger than the carbonate. Copper red at fractions of a percent; greens need oxidation.',
+      firedColour: '#7c2b38',
+    },
   },
   {
     id: 'manganese-dioxide',
@@ -126,6 +140,13 @@ export const MATERIALS: Material[] = [
     note: 'Amber at 2%, saturated brown by 8–10%.',
     firedColour: '#8a4a24',
     families: ['iron'],
+    reduction: {
+      recommendedMin: 1,
+      recommendedMax: 10,
+      defaultMax: 3,
+      note: 'Celadon at 1–3%, tenmoku at 8–10%. A different material in reduction.',
+      firedColour: '#8ca08e',
+    },
   },
   {
     id: 'rutile-light',
@@ -138,6 +159,9 @@ export const MATERIALS: Material[] = [
     note: 'Variegation and mottling.',
     firedColour: '#c69a58',
     families: ['rutile'],
+    reduction: {
+      note: 'Rutile blues and hare\'s-fur streaking, especially over iron.',
+    },
   },
   {
     id: 'rutile-dark',
@@ -150,6 +174,9 @@ export const MATERIALS: Material[] = [
     note: 'More iron than light rutile; browner.',
     firedColour: '#a97e42',
     families: ['rutile'],
+    reduction: {
+      note: 'Rutile blues and hare\'s-fur streaking; the extra iron helps.',
+    },
   },
   {
     id: 'titanium-dioxide',
@@ -198,6 +225,10 @@ export const MATERIALS: Material[] = [
     note: 'Yellow.',
     firedColour: '#d1a828',
     families: [],
+    reduction: {
+      note: 'Weak, greyed yellows — vanadium wants oxidation.',
+      firedColour: '#a09a76',
+    },
   },
   {
     id: 'mason-stain',
@@ -222,6 +253,13 @@ export const MATERIALS: Material[] = [
     note: 'Same chemistry as red iron once fired; slightly softer ochre-ambers.',
     firedColour: '#a5722f',
     families: ['iron'],
+    reduction: {
+      recommendedMin: 1,
+      recommendedMax: 10,
+      defaultMax: 3,
+      note: 'As red iron once fired: celadons low, tenmoku high.',
+      firedColour: '#8ca08e',
+    },
   },
   {
     id: 'black-iron-oxide',
@@ -234,6 +272,13 @@ export const MATERIALS: Material[] = [
     note: 'Coarser than red iron; greyer, moodier browns.',
     firedColour: '#5f4636',
     families: ['iron'],
+    reduction: {
+      recommendedMin: 1,
+      recommendedMax: 10,
+      defaultMax: 3,
+      note: 'As red iron once fired, slightly coarser: celadons low, tenmoku high.',
+      firedColour: '#85987f',
+    },
   },
   {
     id: 'manganese-carbonate',
@@ -270,6 +315,9 @@ export const MATERIALS: Material[] = [
     note: 'Coarse specks and streaks rather than overall mottle.',
     firedColour: '#b08a50',
     families: ['rutile'],
+    reduction: {
+      note: 'Coarse specks and streaks; speckling reads stronger in reduction.',
+    },
   },
   {
     id: 'zinc-oxide',
@@ -306,6 +354,9 @@ export const MATERIALS: Material[] = [
     note: 'Local reduction in oxidation: craters, lava surfaces, flashes of copper red.',
     firedColour: '#4a4a4a',
     families: [],
+    reduction: {
+      note: 'Redundant in a reduction firing — the kiln already does this.',
+    },
   },
   {
     id: 'wood-ash',
@@ -323,4 +374,10 @@ export const MATERIALS: Material[] = [
 
 export function findMaterial(id: string): Material | undefined {
   return MATERIALS.find((m) => m.id === id)
+}
+
+/** Apply a material's reduction overrides when the firing is reduction. */
+export function resolveMaterial(m: Material, atmosphere: Atmosphere): Material {
+  if (atmosphere === 'red' && m.reduction) return { ...m, ...m.reduction }
+  return m
 }

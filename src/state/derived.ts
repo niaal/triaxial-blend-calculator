@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useStore } from './store'
-import { findMaterial } from '../data/materials'
+import { findMaterial, resolveMaterial } from '../data/materials'
 import { matchedInteractions } from '../data/interactions'
 import {
   cellDoses,
@@ -45,9 +45,10 @@ export function useDerived(): Derived {
   return useMemo(() => {
     const n = TILE_TO_N[blend.grid.tileCount]
     const dryWeight = dryWeightOf(blend.measurement)
-    const cornerMaterials = blend.corners.map((c) =>
-      findMaterial(c.materialId),
-    ) as Derived['cornerMaterials']
+    const cornerMaterials = blend.corners.map((c) => {
+      const m = findMaterial(c.materialId)
+      return m ? resolveMaterial(m, blend.atmosphere) : undefined
+    }) as Derived['cornerMaterials']
     const guards = blend.corners.map((c) => {
       const step = stepSize(dryWeight, c.maxPercent, n, c.stockConcentration)
       return {
@@ -75,7 +76,7 @@ export function useDerived(): Derived {
       ) as Derived['cornerColours'],
       guards,
       anyBlocked: guards.some((g) => g.level === 'block'),
-      notes: matchedInteractions(cornerMaterials, blend.base),
+      notes: matchedInteractions(cornerMaterials, blend.base, blend.atmosphere),
       totals: forecast(blend),
       dosesFor: (cell) => cellDoses(cell, blend),
       weightDecimals: incDecimals(blend.measurement.scaleIncrement),

@@ -21,6 +21,7 @@ const corner = (over: Partial<Corner> = {}): Corner => ({
 const session = (over: Partial<Blend> = {}): Blend => ({
   name: 'test',
   base: { name: 'Leach 4321', zincBearing: false },
+  atmosphere: 'ox',
   corners: [corner(), corner(), corner()],
   grid: { tileCount: 21 },
   measurement: {

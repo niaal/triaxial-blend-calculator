@@ -16,6 +16,7 @@ export function defaultBlend(): Blend {
       recipe: '40 potash feldspar · 30 silica · 20 whiting · 10 kaolin',
       zincBearing: false,
     },
+    atmosphere: 'ox',
     corners: [
       { materialId: 'chrome-oxide', maxPercent: 1, stockConcentration: 1 },
       { materialId: 'tin-oxide', maxPercent: 8, stockConcentration: 1 },

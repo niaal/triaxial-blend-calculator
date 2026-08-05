@@ -8,6 +8,7 @@ import {
 } from 'react'
 import type { ReactNode } from 'react'
 import type {
+  Atmosphere,
   BaseGlaze,
   Blend,
   Corner,
@@ -19,6 +20,7 @@ import { defaultBlend } from '../lib/blend'
 
 type Action =
   | { type: 'rename'; name: string }
+  | { type: 'set-atmosphere'; atmosphere: Atmosphere }
   | { type: 'update-base'; base: Partial<BaseGlaze> }
   | { type: 'update-grid'; grid: Partial<GridConfig> }
   | { type: 'update-measurement'; measurement: Partial<MeasurementConfig> }
@@ -29,6 +31,8 @@ function reducer(blend: Blend, action: Action): Blend {
   switch (action.type) {
     case 'rename':
       return { ...blend, name: action.name }
+    case 'set-atmosphere':
+      return { ...blend, atmosphere: action.atmosphere }
     case 'update-base':
       return { ...blend, base: { ...blend.base, ...action.base } }
     case 'update-grid':

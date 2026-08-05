@@ -1,6 +1,6 @@
 import { useStore } from '../state/store'
 import { useDerived, fmt } from '../state/derived'
-import { MATERIALS } from '../data/materials'
+import { MATERIALS, resolveMaterial } from '../data/materials'
 import { NumField } from './fields'
 import { CORNER_LABELS } from '../types'
 import type { Corner } from '../types'
@@ -51,7 +51,8 @@ export function CornerCard({ index }: { index: 0 | 1 | 2 }) {
                 update({ materialId: 'custom', customName: corner.customName ?? '' })
                 return
               }
-              const mat = MATERIALS.find((m) => m.id === id)
+              const found = MATERIALS.find((m) => m.id === id)
+              const mat = found ? resolveMaterial(found, blend.atmosphere) : undefined
               update({ materialId: id, maxPercent: mat?.defaultMax ?? corner.maxPercent })
             }}
           >

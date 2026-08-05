@@ -45,7 +45,7 @@ export default function App() {
             <h1 className="font-display text-xl font-semibold leading-none">
               Triaxial
               <span className="block font-sans text-[0.6rem] font-normal uppercase tracking-[0.18em] text-ink-2 mt-1">
-                blend calculator · cone 10 ox
+                blend calculator · cone 10 {blend.atmosphere === 'red' ? 'reduction' : 'ox'}
               </span>
             </h1>
             <div className="ml-auto flex items-center gap-1.5 no-print">
