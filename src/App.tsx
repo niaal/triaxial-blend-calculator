@@ -4,7 +4,8 @@ import { TriangleScreen } from './components/TriangleScreen'
 import { BatchSheetScreen } from './components/BatchSheetScreen'
 import { PrintChart, PrintSheet } from './components/PrintSheets'
 import { useStore } from './state/store'
-import { encodeBlend } from './lib/share'
+import { shareUrlFor } from './lib/share'
+import { QrOverlay } from './components/Qr'
 
 const TABS = ['Setup', 'Triangle', 'Batch sheet'] as const
 type Tab = (typeof TABS)[number]
@@ -22,10 +23,11 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('Setup')
   const { blend, dispatch } = useStore()
   const [copied, setCopied] = useState(false)
+  const [showQr, setShowQr] = useState(false)
 
   async function copyLink() {
     // encode fresh rather than trusting the (debounced) address bar
-    const url = `${window.location.origin}${window.location.pathname}?s=${encodeBlend(blend)}`
+    const url = shareUrlFor(blend)
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
@@ -49,6 +51,9 @@ export default function App() {
             <div className="ml-auto flex items-center gap-1.5 no-print">
               <button className="btn btn-accent" onClick={copyLink}>
                 {copied ? 'Link copied ✓' : 'Copy link'}
+              </button>
+              <button className="btn" onClick={() => setShowQr(true)}>
+                QR code
               </button>
               <button
                 className="btn btn-quiet"
@@ -95,6 +100,14 @@ export default function App() {
           a class doc, a bookmark.
         </footer>
       </div>
+
+      {showQr && (
+        <QrOverlay
+          url={shareUrlFor(blend)}
+          title={blend.name}
+          onClose={() => setShowQr(false)}
+        />
+      )}
 
       <PrintChart />
       <PrintSheet />

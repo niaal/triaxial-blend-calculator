@@ -2,31 +2,53 @@ import { useStore } from '../state/store'
 import { useDerived, fmt } from '../state/derived'
 import { TriangleSVG } from './TriangleSVG'
 import { CORNER_LABELS } from '../types'
+import { shareUrlFor } from '../lib/share'
+import { useQrDataUrl } from './Qr'
 
 function PrintHeader({ subtitle }: { subtitle: string }) {
   const { blend } = useStore()
   const d = useDerived()
   const m = blend.measurement
+  // every printout carries its own setup link — scan any old sheet to reopen it
+  const qr = useQrDataUrl(shareUrlFor(blend), 256)
   return (
-    <header style={{ borderBottom: '2pt solid #111', marginBottom: '8pt', paddingBottom: '4pt' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <strong style={{ fontSize: '14pt' }}>{blend.name}</strong>
-        <span style={{ fontSize: '9pt' }}>{new Date().toLocaleDateString()}</span>
+    <header
+      style={{
+        borderBottom: '2pt solid #111',
+        marginBottom: '8pt',
+        paddingBottom: '4pt',
+        display: 'flex',
+        gap: '8pt',
+        alignItems: 'flex-start',
+      }}
+    >
+      <div style={{ flex: 1 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <strong style={{ fontSize: '14pt' }}>{blend.name}</strong>
+          <span style={{ fontSize: '9pt' }}>{new Date().toLocaleDateString()}</span>
+        </div>
+        <div style={{ fontSize: '9pt', marginTop: '2pt' }}>
+          {subtitle} · base {blend.base.name} · {m.portionWeight} g {m.portionMode} portion
+          {m.portionMode === 'slurry' && ` (SG ${m.slurrySG} → ${fmt(d.dryWeight, 1)} g dry base)`} ·
+          scale {m.scaleIncrement} g
+        </div>
+        <div style={{ fontSize: '9pt', marginTop: '2pt' }}>
+          {([0, 1, 2] as const).map((i) => (
+            <span key={i} style={{ marginRight: '12pt' }}>
+              <strong>{CORNER_LABELS[i]}</strong> {d.cornerNames[i]} ≤{blend.corners[i].maxPercent}%
+              {blend.corners[i].stockConcentration < 1 &&
+                ` as ${Math.round(blend.corners[i].stockConcentration * 100)}% stock`}
+            </span>
+          ))}
+        </div>
       </div>
-      <div style={{ fontSize: '9pt', marginTop: '2pt' }}>
-        {subtitle} · base {blend.base.name} · {m.portionWeight} g {m.portionMode} portion
-        {m.portionMode === 'slurry' && ` (SG ${m.slurrySG} → ${fmt(d.dryWeight, 1)} g dry base)`} ·
-        scale {m.scaleIncrement} g
-      </div>
-      <div style={{ fontSize: '9pt', marginTop: '2pt' }}>
-        {([0, 1, 2] as const).map((i) => (
-          <span key={i} style={{ marginRight: '12pt' }}>
-            <strong>{CORNER_LABELS[i]}</strong> {d.cornerNames[i]} ≤{blend.corners[i].maxPercent}%
-            {blend.corners[i].stockConcentration < 1 &&
-              ` as ${Math.round(blend.corners[i].stockConcentration * 100)}% stock`}
-          </span>
-        ))}
-      </div>
+      {qr && (
+        <img
+          src={qr}
+          alt="QR code — scan to open this setup"
+          style={{ width: '58pt', height: '58pt', flexShrink: 0 }}
+        />
+      )}
     </header>
   )
 }

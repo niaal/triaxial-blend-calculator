@@ -69,3 +69,8 @@ export function syncBlendToUrl(blend: Blend): void {
   const url = `${window.location.pathname}?s=${encodeBlend(blend)}`
   window.history.replaceState(null, '', url)
 }
+
+/** Canonical absolute link for the current blend (fresh, not the debounced address bar). */
+export function shareUrlFor(blend: Blend): string {
+  return `${window.location.origin}${window.location.pathname}?s=${encodeBlend(blend)}`
+}
