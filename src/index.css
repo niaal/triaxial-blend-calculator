@@ -1,0 +1,234 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Public Sans Variable', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Public Sans Variable', sans-serif;
+
+  --color-paper: #fafaf8;
+  --color-paper-2: #f2f1ed;
+  --color-ink: #17171b;
+  --color-ink-2: #5b5b64;
+  --color-rule: #d9d8d1;
+  --color-accent: #2b3fbd;
+  --color-accent-soft: #e7eafb;
+  --color-warn: #9a5800;
+  --color-warn-soft: #fdf2e0;
+  --color-block: #b3261e;
+  --color-block-soft: #fbeae9;
+  --color-good: #1d6b3c;
+  --color-good-soft: #e6f2ea;
+}
+
+html {
+  background: var(--color-paper);
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-variant-numeric: normal;
+}
+
+/* form-record section label, like a printed batch document */
+.section-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-ink-2);
+  border-bottom: 1px solid var(--color-ink);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.9rem;
+}
+.section-label .num {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.field-label {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.62rem;
+  color: var(--color-ink-2);
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  width: 100%;
+  background: white;
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  padding: 0.4rem 0.55rem;
+  font: inherit;
+  color: var(--color-ink);
+}
+.input:focus-visible,
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* triangle cells: focus lives on the hexagon stroke, never a bounding box */
+svg g[role='button']:focus,
+svg g[role='button']:focus-visible {
+  outline: none;
+}
+svg g[role='button']:focus-visible > polygon {
+  stroke: var(--color-accent);
+  stroke-width: 4px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--color-ink);
+  border-radius: 2px;
+  background: white;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.btn:hover {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+.btn-accent {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: white;
+}
+.btn-accent:hover {
+  background: #1f2f96;
+  border-color: #1f2f96;
+  color: white;
+}
+.btn-quiet {
+  border-color: var(--color-rule);
+  color: var(--color-ink-2);
+}
+.btn-quiet:hover {
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--color-rule);
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.72rem;
+  background: white;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.chip[aria-pressed='true'] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.hazard {
+  display: inline-block;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  padding: 0 0.3rem;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-warn);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Print                                                               */
+/* ------------------------------------------------------------------ */
+
+#print-chart,
+#print-sheet {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  html,
+  body {
+    background: white;
+  }
+  html[data-print] #app-root {
+    display: none !important;
+  }
+  html[data-print='chart'] #print-chart {
+    display: block;
+  }
+  html[data-print='sheet'] #print-sheet {
+    display: block;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10pt;
+}
+.print-table th,
+.print-table td {
+  border: 1px solid #999;
+  padding: 3pt 6pt;
+  text-align: right;
+}
+.print-table th:first-child,
+.print-table td:first-child {
+  text-align: center;
+}
+.print-table thead {
+  background: #eee;
+}
+.print-table tr {
+  break-inside: avoid;
+}
+
+.tick-box {
+  display: inline-block;
+  width: 12pt;
+  height: 12pt;
+  border: 1.5pt solid #333;
+  vertical-align: middle;
+}
